@@ -37,11 +37,12 @@ public class OwnersStoredValues {
       protected PathOwners createValue(Prolog engine) {
         PatchList patchList = StoredValues.PATCH_LIST.get(engine);
         Repository repository = StoredValues.REPOSITORY.get(engine);
+        String branch = StoredValues.CHANGE.get(engine).getDest().get();
 
         PrologEnvironment env = (PrologEnvironment) engine.control;
 
         try {
-          return new PathOwners(resolver, repository, patchList);
+          return new PathOwners(resolver, repository, patchList, branch);
         } catch (OrmException e) {
           throw new SystemException(e.getMessage());
         }

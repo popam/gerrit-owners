@@ -79,7 +79,10 @@ public class GitRefListener implements GitReferenceUpdatedListener {
         Change change = db.get().changes().get(id);
         PatchList patchList = getPatchList(event, change);
         if (patchList != null) {
-          PathOwners owners = new PathOwners(accountResolver, repository, patchList);
+          // Get branch as the last string after "/".
+          String[] tokens = event.getRefName().split("/");
+          String branch = tokens[tokens.length - 1];
+          PathOwners owners = new PathOwners(accountResolver, repository, patchList, branch);
           reviewerManager.addReviewers(change, owners.get().values());
         }
       } catch (OrmException e) {

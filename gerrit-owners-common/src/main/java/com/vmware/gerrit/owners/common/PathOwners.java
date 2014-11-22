@@ -40,11 +40,14 @@ public class PathOwners {
   private final Repository repository;
 
   private final PatchList patchList;
+  
+  private final String branch;
 
-  public PathOwners(AccountResolver resolver, Repository repository, PatchList patchList) throws OrmException {
+  public PathOwners(AccountResolver resolver, Repository repository, PatchList patchList, String branch) throws OrmException {
     this.repository = repository;
     this.resolver = resolver;
     this.patchList = patchList;
+    this.branch = branch;
 
     owners = Multimaps.unmodifiableSetMultimap(fetchOwners());
   }
@@ -146,7 +149,7 @@ public class PathOwners {
    * @return config or null if it doesn't exist
    */
   private OwnersConfig getOwners(String ownersPath) {
-    String owners = BlobUtils.getContent(repository, "master", ownersPath);
+    String owners = BlobUtils.getContent(repository, branch, ownersPath);
 
     if (owners != null) {
       ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
